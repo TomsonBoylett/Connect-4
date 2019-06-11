@@ -13,8 +13,10 @@ public class VictoryActionListener implements ActionListener {
     private int[][] points;
     private JPanel[] columns;
     private Icon turn;
+    private ConnectGame game;
 
-    public VictoryActionListener(int[][] points, JPanel[] columns, Icon turn) {
+    public VictoryActionListener(ConnectGame game, int[][] points, JPanel[] columns, Icon turn) {
+        this.game = game;
         this.points = points;
         this.columns = columns;
         this.turn = turn;
@@ -28,7 +30,7 @@ public class VictoryActionListener implements ActionListener {
         if (counter > 7) {
             ((Timer) e.getSource()).stop();
             clearGame();
-            ConnectGame.getInstance().mouseListeners(true);
+            game.columnListeners(true);
         }
     }
 

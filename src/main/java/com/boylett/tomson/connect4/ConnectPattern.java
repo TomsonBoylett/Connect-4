@@ -1,9 +1,5 @@
 package com.boylett.tomson.connect4;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 /**
  * Created by Tomson on 12/05/2016.
  */
@@ -30,7 +26,7 @@ public class ConnectPattern {
 
                     // Check in 4 directions to find 4 in a row.
                     for (int[] DIRECTION : DIRECTIONS) {
-                        if (isFourIn(boardData, i, j, DIRECTION[0], DIRECTION[1], (boardData[i][j] == RED))) {
+                        if (isFourIn(boardData, i, j, DIRECTION[0], DIRECTION[1])) {
                             int[][] points = new int[NUMBER_IN_ROW][2];
                             for (int k = 0; k < NUMBER_IN_ROW; k++) {
                                 points[k][0] = i + (k * DIRECTION[0]);
@@ -51,67 +47,26 @@ public class ConnectPattern {
         return (isFourInRowDetail(boardData).length > 0);
     }
 
-    private static boolean isFourIn(char[][] boardData, int startX, int startY, int offsetX, int offsetY, boolean turn) {
-        char side = ConnectGame.iconToChar(turn ? GameBoardSpace.RED : GameBoardSpace.YELLOW);
-
-        if (((startX + (NUMBER_IN_ROW - 1)*offsetX) >= boardData.length) ||
-                ((startX + (NUMBER_IN_ROW - 1)*offsetX) < 0) ||
-                ((startY + (NUMBER_IN_ROW - 1)*offsetY) >= boardData[startX].length) ||
-                ((startY + (NUMBER_IN_ROW - 1)*offsetY) < 0)) {
+    private static boolean isFourIn(char[][] boardData, int startX, int startY, int directionX, int directionY) {
+        char side = boardData[startX][startY];
+        
+        if (side == BLANK) {
             return false;
         }
 
-        for (int i = 0; i <= (NUMBER_IN_ROW - 1); i++) {
-            if (boardData[startX + (i * offsetX)][startY + (i * offsetY)] != side) {
+        if  (((startX + (NUMBER_IN_ROW - 1)*directionX) >= boardData.length) ||
+             ((startX + (NUMBER_IN_ROW - 1)*directionX) < 0) ||
+             ((startY + (NUMBER_IN_ROW - 1)*directionY) >= boardData[0].length) ||
+             ((startY + (NUMBER_IN_ROW - 1)*directionY) < 0)) {
+            return false;
+        }
+
+        for (int i = 0; i < NUMBER_IN_ROW; i++) {
+            if (boardData[startX + (i * directionX)][startY + (i * directionY)] != side) {
                 return false;
             }
         }
 
         return true;
-    }
-
-    public static int[][] getPossibleMoves(char[][] boardData) {
-        List<int[]> possibleMoves = new ArrayList<>();
-        for (int i = 0; i < boardData.length; i++) {
-            for (int j = (boardData[i].length - 1); j >= 0 ; j--) {
-                if (boardData[i][j] == BLANK) {
-                    possibleMoves.add(new int[]{i,j});
-                    break;
-                }
-            }
-        }
-        return possibleMoves.toArray(new int[possibleMoves.size()][2]);
-    }
-
-    public static int getHeuristic(char[][] boardData, boolean turn) {
-        char[][] bdCopy = new char[boardData.length][boardData[0].length];
-        for (int i = 0; i < boardData.length; i++) {
-            bdCopy[i] = Arrays.copyOf(boardData[i], boardData[i].length);
-        }
-
-        int heuristic = 0;
-        // For each space in the board...
-        for (int i = 0; i < bdCopy.length; i++) {
-            for (int j = 0; j < bdCopy[i].length; j++) {
-                if (bdCopy[i][j] == BLANK) {
-                    bdCopy[i][j] = RED;
-
-                    if (isFourInRow(bdCopy)) {
-                        heuristic++;
-                    }
-                    else {
-                        bdCopy[i][j] = YELLOW;
-
-                        if(isFourInRow(bdCopy)) {
-                            heuristic--;
-                        }
-                    }
-                    bdCopy[i][j] = BLANK;
-                }
-
-            }
-        }
-
-        return heuristic;
     }
 }
