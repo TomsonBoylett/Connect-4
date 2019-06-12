@@ -4,7 +4,9 @@ import javax.swing.*;
 import java.security.InvalidParameterException;
 
 /**
- * Created by Tomson on 12/05/2016.
+ * A JLabel which can only display certain icons
+ * 
+ * @author Tomson Boylett
  */
 public class GameBoardSpace extends JLabel{
     public static final ImageIcon BLANK = new ImageIcon(ConnectGame.class.getResource("/blank.png"));
